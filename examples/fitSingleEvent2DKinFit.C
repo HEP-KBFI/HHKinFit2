@@ -3,7 +3,7 @@
 #include "TLorentzVector.h"
 #include "TMatrixD.h"
 #include "TVector2.h"
-#include "HHKinFitMasterHeavyHiggs.h"
+#include "../interface/HHKinFitMasterHeavyHiggs.h"
 
 
 using HHKinFit2::HHKinFitMasterHeavyHiggs;

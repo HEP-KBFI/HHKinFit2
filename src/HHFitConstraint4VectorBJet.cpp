@@ -2,8 +2,8 @@
 #include "HHFitConstraint4VectorBJet.h"
 #include "exceptions/HHCovarianceMatrixException.h"
 #else
-#include "HHKinFit2/HHKinFit2/interface/HHFitConstraint4VectorBJet.h"
-#include "HHKinFit2/HHKinFit2/interface/exceptions/HHCovarianceMatrixException.h"
+#include "../interface/HHFitConstraint4VectorBJet.h"
+#include "../interface/exceptions/HHCovarianceMatrixException.h"
 #endif
 
 #include "TMath.h"

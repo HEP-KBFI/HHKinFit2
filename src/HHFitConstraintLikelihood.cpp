@@ -1,8 +1,4 @@
-#ifdef HHKINFIT2
-#include "HHFitConstraintLikelihood.h"
-#else
-#include "HHKinFit2/HHKinFit2/interface/HHFitConstraintLikelihood.h"
-#endif
+#include "../interface/HHFitConstraintLikelihood.h"
 
 #include <cmath>
 #include <iostream>

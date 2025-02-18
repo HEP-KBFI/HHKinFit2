@@ -5,14 +5,8 @@
 #ifndef HHFitObjectConstM_
 #define HHFitObjectConstM_
 
-#ifdef HHKINFIT2
 #include "HHLorentzVector.h"
 #include "HHFitObjectE.h"
-#else
-#include "HHKinFit2/HHKinFit2/interface/HHLorentzVector.h"
-#include "HHKinFit2/HHKinFit2/interface/HHFitObjectE.h"
-#endif
-
 #include "TMatrixD.h"
 
 namespace HHKinFit2{

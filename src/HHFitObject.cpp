@@ -1,8 +1,4 @@
-#ifdef HHKINFIT2
-#include "HHFitObject.h"
-#else
-#include "HHKinFit2/HHKinFit2/interface/HHFitObject.h"
-#endif
+#include "../interface/HHFitObject.h"
 
 #include <iostream>
 #include <iomanip>

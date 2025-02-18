@@ -4,10 +4,10 @@
 #include "exceptions/HHEnergyRangeException.h"
 #include "exceptions/HHInvMConstraintException.h"
 #else
-#include "HHKinFit2/HHKinFit2/interface/HHFitConstraintEHardM.h"
-#include "HHKinFit2/HHKinFit2/interface/HHFitObjectE.h"
-#include "HHKinFit2/HHKinFit2/interface/exceptions/HHEnergyRangeException.h"
-#include "HHKinFit2/HHKinFit2/interface/exceptions/HHInvMConstraintException.h"
+#include "../interface/HHFitConstraintEHardM.h"
+#include "../interface/HHFitObjectE.h"
+#include "../interface/exceptions/HHEnergyRangeException.h"
+#include "../interface/exceptions/HHInvMConstraintException.h"
 #endif
 
 HHKinFit2::HHFitConstraintEHardM::HHFitConstraintEHardM(HHFitObject* fitobject, HHFitObject* constrainedobject, double mass)

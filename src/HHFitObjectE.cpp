@@ -1,14 +1,7 @@
-#ifdef HHKINFIT2
-#include "HHFitObjectE.h"
-#include "exceptions/HHEnergyRangeException.h"
-#include "exceptions/HHEnergyConstraintException.h"
-#include "exceptions/HHLimitSettingException.h"
-#else
-#include "HHKinFit2/HHKinFit2/interface/HHFitObjectE.h"
-#include "HHKinFit2/HHKinFit2/interface/exceptions/HHEnergyRangeException.h"
-#include "HHKinFit2/HHKinFit2/interface/exceptions/HHEnergyConstraintException.h"
-#include "HHKinFit2/HHKinFit2/interface/exceptions/HHLimitSettingException.h"
-#endif
+#include "../interface/HHFitObjectE.h"
+#include "../interface/exceptions/HHEnergyRangeException.h"
+#include "../interface/exceptions/HHEnergyConstraintException.h"
+#include "../interface/exceptions/HHLimitSettingException.h"
 
 #include <iostream>
 #include <iomanip>

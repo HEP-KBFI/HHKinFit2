@@ -1,32 +1,16 @@
-#ifdef HHKINFIT2
-#include "HHKinFit.h"
-#include "HHFitConstraint4Vector.h"
-#include "HHFitConstraintEHardM.h"
-#include "HHFitConstraint.h"
-#include "HHFitConstraintLikelihood.h"
-#include "HHFitObjectEConstM.h"
-#include "HHFitObjectE.h"
-#include "HHFitObject.h"
-#include "HHFitObjectComposite.h"
-#include "PSMath.h"
-#include "exceptions/HHEnergyRangeException.h"
-#include "exceptions/HHInvMConstraintException.h"
-#include "exceptions/HHLimitSettingException.h"
-#else
-#include "HHKinFit2/HHKinFit2/interface/HHKinFit.h"
-#include "HHKinFit2/HHKinFit2/interface/HHFitConstraint4Vector.h"
-#include "HHKinFit2/HHKinFit2/interface/HHFitConstraintEHardM.h"
-#include "HHKinFit2/HHKinFit2/interface/HHFitConstraint.h"
-#include "HHKinFit2/HHKinFit2/interface/HHFitConstraintLikelihood.h"
-#include "HHKinFit2/HHKinFit2/interface/HHFitObjectEConstM.h"
-#include "HHKinFit2/HHKinFit2/interface/HHFitObjectE.h"
-#include "HHKinFit2/HHKinFit2/interface/HHFitObject.h"
-#include "HHKinFit2/HHKinFit2/interface/HHFitObjectComposite.h"
-#include "HHKinFit2/HHKinFit2/interface/PSMath.h"
-#include "HHKinFit2/HHKinFit2/interface/exceptions/HHEnergyRangeException.h"
-#include "HHKinFit2/HHKinFit2/interface/exceptions/HHInvMConstraintException.h"
-#include "HHKinFit2/HHKinFit2/interface/exceptions/HHLimitSettingException.h"
-#endif
+#include "../interface/HHKinFit.h"
+#include "../interface/HHFitConstraint4Vector.h"
+#include "../interface/HHFitConstraintEHardM.h"
+#include "../interface/HHFitConstraint.h"
+#include "../interface/HHFitConstraintLikelihood.h"
+#include "../interface/HHFitObjectEConstM.h"
+#include "../interface/HHFitObjectE.h"
+#include "../interface/HHFitObject.h"
+#include "../interface/HHFitObjectComposite.h"
+#include "../interface/PSMath.h"
+#include "../interface/exceptions/HHEnergyRangeException.h"
+#include "../interface/exceptions/HHInvMConstraintException.h"
+#include "../interface/exceptions/HHLimitSettingException.h"
 
 #include "TAxis.h"
 
@@ -125,7 +109,7 @@ HHKinFit2::HHKinFit::fit(){
     bool respectLimits = (iter>=0) ; // do not respect limits when calculating numerical derivative
     for (unsigned int i=0; i<m_fitobjects.size();i++){
       try{
-	if(isnan(a[i]))
+	if(std::isnan(a[i]))
 	{
 	  std::cout << "WARNING! PSMath changed E of fit object " << i 
 		    << "to NAN!" << std::endl;

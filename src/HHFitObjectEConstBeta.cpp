@@ -1,12 +1,6 @@
-#ifdef HHKINFIT2
-#include "HHFitObjectEConstBeta.h"
-#include "exceptions/HHEnergyRangeException.h"
-#include "exceptions/HHEnergyConstraintException.h"
-#else
-#include "HHKinFit2/HHKinFit2/interface/HHFitObjectEConstBeta.h"
-#include "HHKinFit2/HHKinFit2/interface/exceptions/HHEnergyRangeException.h"
-#include "HHKinFit2/HHKinFit2/interface/exceptions/HHEnergyConstraintException.h"
-#endif
+#include "../interface/HHFitObjectEConstBeta.h"
+#include "../interface/exceptions/HHEnergyRangeException.h"
+#include "../interface/exceptions/HHEnergyConstraintException.h"
 
 #include <cassert>
 #include <iostream>

@@ -1,10 +1,5 @@
-#ifdef HHKINFIT2
-#include "HHLorentzVector.h"
-#include "exceptions/HHEnergyRangeException.h"
-#else
-#include "HHKinFit2/HHKinFit2/interface/HHLorentzVector.h"
-#include "HHKinFit2/HHKinFit2/interface/exceptions/HHEnergyRangeException.h"
-#endif
+#include "../interface/HHLorentzVector.h"
+#include "../interface/exceptions/HHEnergyRangeException.h"
 
 #include <cmath>
 #include <sstream>
@@ -60,7 +55,7 @@ HHKinFit2::HHLorentzVector::SetEkeepM(double E){
   }
   
   double pnew = sqrt(pow(E,2)-pow(M(),2));
-  if (isnan(pnew)) {
+  if (std::isnan(pnew)) {
       std::cout << "WARNING: SetEkeepM(): Targeted E is smaller than m. Set P=1, E=sqrt(m**2+1**2)" << std::endl;
       std::cout << "E: " << E << std::endl;
       std::cout << "M: " << M() << std::endl;

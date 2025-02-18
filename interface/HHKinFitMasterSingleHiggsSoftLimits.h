@@ -5,13 +5,8 @@
 #include <TMatrixD.h>
 #include <TVector2.h>
 
-#ifdef HHKINFIT2
 #include "HHLorentzVector.h"
 #include "HHKinFit.h"
-#else
-#include "HHKinFit2/HHKinFit2/interface/HHLorentzVector.h"
-#include "HHKinFit2/HHKinFit2/interface/HHKinFit.h"
-#endif
 
 #include <stdio.h>
 #include <map>
