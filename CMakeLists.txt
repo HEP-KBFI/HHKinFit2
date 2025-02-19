@@ -21,9 +21,9 @@ add_executable(fitSingleEvent2DKinFit examples/fitSingleEvent2DKinFit.C )
 target_link_libraries(fitSingleEvent2DKinFit PUBLIC libHHKinFit2 )
 
 find_package(pybind11 REQUIRED)
-pybind11_add_module(testbind python/hhkinfit.cpp)
-target_link_libraries(testbind PUBLIC libHHKinFit2)
-install(TARGETS testbind
+pybind11_add_module(hhkinfit2 python/hhkinfit.cpp)
+target_link_libraries(hhkinfit2 PUBLIC libHHKinFit2)
+install(TARGETS hhkinfit2
   COMPONENT python
   LIBRARY DESTINATION "${PYTHON_LIBRARY_DIR}"
   )
