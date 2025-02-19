@@ -1,5 +1,5 @@
 #include <pybind11/pybind11.h>
-
+#include <pybind11/stl.h>
 #include <iostream>
 
 #include "TLorentzVector.h"
@@ -13,21 +13,21 @@ class HHFitterCF{
 public:
   HHFitterCF();
   void fit();
-  double* getFittedB1();
-  double* getFittedB2();
-  double* getFittedTau1();
-  double* getFittedTau2();
+  std::vector<double> getFittedB1();
+  std::vector<double> getFittedB2();
+  std::vector<double> getFittedTau1();
+  std::vector<double> getFittedTau2();
   double getMH();
   double getChi2();
   double getFitProb();
   int getConvergence();
-  void setB1(double px, double py, double pz, double energy);
-  void setB2(double px, double py, double pz, double energy);
-  void setTauVis1(double px, double py, double pz, double energy);
-  void setTauVis2(double px, double py, double pz, double energy);
-  void setMetCov(double xx, double xy, double yx, double yy);
-  void setMet(double metx, double mety);
-  void setBJetRes(double res1, double res2);
+  void setB1(std::vector<double>);
+  void setB2(std::vector<double> p4);
+  void setTauVis1(std::vector<double> p4);
+  void setTauVis2(std::vector<double> p4);
+  void setMetCov(std::vector<double> cov);
+  void setMet(std::vector<double> metxy);
+  void setBJetRes(std::vector<double> res);
   private:
   TLorentzVector bjet1;
   TLorentzVector bjet2;
@@ -58,7 +58,7 @@ HHFitterCF::HHFitterCF(){
     (*met_cov)[1][1]= 200;
     bjetres1 = -1;
     bjetres2 = -1;
-    heavyhiggsfit = new HHKinFitMasterHeavyHiggs(bjet1, bjet2, tauvis1, tauvis2, met, *met_cov);
+    heavyhiggsfit = new HHKinFitMasterHeavyHiggs(bjet1, bjet2, tauvis1, tauvis2, met, *met_cov, bjetres1, bjetres2);
     heavyhiggsfit->fit();
     fittedTau1 = heavyhiggsfit->getFittedTau1();
     fittedTau2 = heavyhiggsfit->getFittedTau2();
@@ -67,43 +67,27 @@ HHFitterCF::HHFitterCF(){
   }
 
   void HHFitterCF::fit(){
-    heavyhiggsfit = new HHKinFitMasterHeavyHiggs(bjet1, bjet2, tauvis1, tauvis2, met, *met_cov);
+    heavyhiggsfit = new HHKinFitMasterHeavyHiggs(bjet1, bjet2, tauvis1, tauvis2, met, *met_cov, bjetres1, bjetres2);
     heavyhiggsfit->fit();
     fittedTau1 = heavyhiggsfit->getFittedTau1();
     fittedTau2 = heavyhiggsfit->getFittedTau2();
     fittedBJet1 = heavyhiggsfit->getFittedBJet1();
     fittedBJet2 = heavyhiggsfit->getFittedBJet2();
   }
-  double* HHFitterCF::getFittedB1(){
-    double *out = new double[4];
-    out[0] = fittedBJet1.Px();
-    out[1] = fittedBJet1.Py();
-    out[2] = fittedBJet1.Pz();
-    out[3] = fittedBJet1.E();
+  std::vector<double> HHFitterCF::getFittedB1(){
+    std::vector<double> out = {fittedBJet1.Px(), fittedBJet1.Py(), fittedBJet1.Pz(), fittedBJet1.Energy()};
     return out;
   }
-  double* HHFitterCF::getFittedB2(){
-    double *out = new double[4];
-    out[0] = fittedBJet2.Px();
-    out[2] = fittedBJet2.Py();
-    out[2] = fittedBJet2.Pz();
-    out[3] = fittedBJet2.E();
+  std::vector<double> HHFitterCF::getFittedB2(){
+    std::vector<double> out = {fittedBJet2.Px(), fittedBJet2.Py(), fittedBJet2.Pz(), fittedBJet2.Energy()};
     return out;
   }
-  double* HHFitterCF::getFittedTau1(){
-    double *out = new double[4];
-    out[0] = fittedTau1.Px();
-    out[1] = fittedTau1.Py();
-    out[2] = fittedTau1.Pz();
-    out[3] = fittedTau1.E();
+  std::vector<double> HHFitterCF::getFittedTau1(){
+    std::vector<double> out = {fittedTau1.Px(), fittedTau1.Py(), fittedTau1.Pz(), fittedTau1.Energy()};
     return out;
   }
-  double* HHFitterCF::getFittedTau2(){
-    double *out = new double[4];
-    out[0] = fittedTau2.Px();
-    out[2] = fittedTau2.Py();
-    out[2] = fittedTau2.Pz();
-    out[3] = fittedTau2.E();
+  std::vector<double> HHFitterCF::getFittedTau2(){
+    std::vector<double> out = {fittedTau2.Px(), fittedTau2.Py(), fittedTau2.Pz(), fittedTau2.Energy()};
     return out;
   }
   double HHFitterCF::getMH(){ return heavyhiggsfit->getMH(); }
@@ -111,31 +95,47 @@ HHFitterCF::HHFitterCF(){
   double HHFitterCF::getFitProb(){ return heavyhiggsfit->getFitProb(); }
   int HHFitterCF::getConvergence(){ return heavyhiggsfit->getConvergence(); }
 
-  void HHFitterCF::setB1(double px, double py, double pz, double energy){
-    bjet1.SetPxPyPzE(px, py, pz, energy);
+void HHFitterCF::setB1(std::vector<double> p4){
+  double px = p4[0];
+  double py = p4[1];
+  double pz = p4[2];
+  double energy = p4[3];
+  bjet1.SetPxPyPzE(px, py, pz, energy);
   }
-  void HHFitterCF::setB2(double px, double py, double pz, double energy){
-    bjet2.SetPxPyPzE(px, py, pz, energy);
+void HHFitterCF::setB2(std::vector<double> p4){
+  double px = p4[0];
+  double py = p4[1];
+  double pz = p4[2];
+  double energy = p4[3];
+  bjet2.SetPxPyPzE(px, py, pz, energy);
   }
-  void HHFitterCF::setTauVis1(double px, double py, double pz, double energy){
+  void HHFitterCF::setTauVis1(std::vector<double> p4){
+    double px = p4[0];
+    double py = p4[1];
+    double pz = p4[2];
+    double energy = p4[3];
     tauvis1.SetPxPyPzE(px, py, pz, energy);
   }
-  void HHFitterCF::setTauVis2(double px, double py, double pz, double energy){
+  void HHFitterCF::setTauVis2(std::vector<double> p4){
+    double px = p4[0];
+    double py = p4[1];
+    double pz = p4[2];
+    double energy = p4[3];        
     tauvis2.SetPxPyPzE(px, py, pz, energy);
   }
-  void HHFitterCF::setMet(double metx, double mety){
-    met.SetX(metx);
-    met.SetY(mety);
+  void HHFitterCF::setMet(std::vector<double> metxy){
+    met.SetX(metxy[0]);
+    met.SetY(metxy[1]);
   }
-  void HHFitterCF::setMetCov(double xx, double xy, double yx, double yy){
-    (*met_cov)[0][0]= xx;
-    (*met_cov)[0][1]= xy;
-    (*met_cov)[1][0]= yx;
-    (*met_cov)[1][1]= yy;
+  void HHFitterCF::setMetCov(std::vector<double> cov){
+    (*met_cov)[0][0]= cov[0];
+    (*met_cov)[0][1]= cov[1];
+    (*met_cov)[1][0]= cov[2];
+    (*met_cov)[1][1]= cov[3];
   }
-  void HHFitterCF::setBJetRes(double res1, double res2){
-    bjetres1=res1;
-    bjetres2=res2;
+  void HHFitterCF::setBJetRes(std::vector<double> res){
+    bjetres1=res[0];
+    bjetres2=res[1];
   }
 
 float fitSingleEvent2DKinFit(){
@@ -177,8 +177,8 @@ float fitSingleEvent2DKinFit(){
 }
 namespace py = pybind11;
 
-PYBIND11_MODULE(testbind, m) {
-  m.doc() = "pybind11 example plugin"; // optional module docstring
+PYBIND11_MODULE(hhkinfit2, m) {
+  m.doc() = "pybind11 version of hhkinfit2"; // optional module docstring
 
   m.def("fitSingleEvent2DKinFit", &fitSingleEvent2DKinFit, "fittest");
 
