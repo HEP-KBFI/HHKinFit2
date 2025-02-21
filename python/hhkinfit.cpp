@@ -66,77 +66,77 @@ HHFitterCF::HHFitterCF(){
     fittedBJet2 = heavyhiggsfit->getFittedBJet2();
   }
 
-  void HHFitterCF::fit(){
-    heavyhiggsfit = new HHKinFitMasterHeavyHiggs(bjet1, bjet2, tauvis1, tauvis2, met, *met_cov, bjetres1, bjetres2);
-    heavyhiggsfit->fit();
-    fittedTau1 = heavyhiggsfit->getFittedTau1();
-    fittedTau2 = heavyhiggsfit->getFittedTau2();
-    fittedBJet1 = heavyhiggsfit->getFittedBJet1();
-    fittedBJet2 = heavyhiggsfit->getFittedBJet2();
-  }
-  std::vector<double> HHFitterCF::getFittedB1(){
-    std::vector<double> out = {fittedBJet1.Px(), fittedBJet1.Py(), fittedBJet1.Pz(), fittedBJet1.Energy()};
-    return out;
-  }
-  std::vector<double> HHFitterCF::getFittedB2(){
-    std::vector<double> out = {fittedBJet2.Px(), fittedBJet2.Py(), fittedBJet2.Pz(), fittedBJet2.Energy()};
-    return out;
-  }
-  std::vector<double> HHFitterCF::getFittedTau1(){
-    std::vector<double> out = {fittedTau1.Px(), fittedTau1.Py(), fittedTau1.Pz(), fittedTau1.Energy()};
-    return out;
-  }
-  std::vector<double> HHFitterCF::getFittedTau2(){
-    std::vector<double> out = {fittedTau2.Px(), fittedTau2.Py(), fittedTau2.Pz(), fittedTau2.Energy()};
-    return out;
-  }
-  double HHFitterCF::getMH(){ return heavyhiggsfit->getMH(); }
-  double HHFitterCF::getChi2(){ return heavyhiggsfit->getChi2(); }
-  double HHFitterCF::getFitProb(){ return heavyhiggsfit->getFitProb(); }
-  int HHFitterCF::getConvergence(){ return heavyhiggsfit->getConvergence(); }
+void HHFitterCF::fit(){
+  heavyhiggsfit = new HHKinFitMasterHeavyHiggs(bjet1, bjet2, tauvis1, tauvis2, met, *met_cov, bjetres1, bjetres2);
+  heavyhiggsfit->fit();
+  fittedTau1 = heavyhiggsfit->getFittedTau1();
+  fittedTau2 = heavyhiggsfit->getFittedTau2();
+  fittedBJet1 = heavyhiggsfit->getFittedBJet1();
+  fittedBJet2 = heavyhiggsfit->getFittedBJet2();
+}
+std::vector<double> HHFitterCF::getFittedB1(){
+  std::vector<double> out = {fittedBJet1.Pt(), fittedBJet1.Eta(), fittedBJet1.Phi(), fittedBJet1.M()};
+  return out;
+}
+std::vector<double> HHFitterCF::getFittedB2(){
+  std::vector<double> out = {fittedBJet2.Pt(), fittedBJet2.Eta(), fittedBJet2.Phi(), fittedBJet2.M()};
+  return out;
+}
+std::vector<double> HHFitterCF::getFittedTau1(){
+  std::vector<double> out = {fittedTau1.Pt(), fittedTau1.Eta(), fittedTau1.Phi(), fittedTau1.M()};
+  return out;
+}
+std::vector<double> HHFitterCF::getFittedTau2(){
+  std::vector<double> out = {fittedTau2.Pt(), fittedTau2.Eta(), fittedTau2.Phi(), fittedTau2.M()};
+  return out;
+}
+double HHFitterCF::getMH(){ return heavyhiggsfit->getMH(); }
+double HHFitterCF::getChi2(){ return heavyhiggsfit->getChi2(); }
+double HHFitterCF::getFitProb(){ return heavyhiggsfit->getFitProb(); }
+int HHFitterCF::getConvergence(){ return heavyhiggsfit->getConvergence(); }
 
 void HHFitterCF::setB1(std::vector<double> p4){
-  double px = p4[0];
-  double py = p4[1];
-  double pz = p4[2];
-  double energy = p4[3];
-  bjet1.SetPxPyPzE(px, py, pz, energy);
-  }
+  double pt = p4[0];
+  double eta = p4[1];
+  double phi = p4[2];
+  double m = p4[3];
+  bjet1.SetPtEtaPhiM(pt, eta, phi, m);
+}
 void HHFitterCF::setB2(std::vector<double> p4){
-  double px = p4[0];
-  double py = p4[1];
-  double pz = p4[2];
-  double energy = p4[3];
-  bjet2.SetPxPyPzE(px, py, pz, energy);
-  }
-  void HHFitterCF::setTauVis1(std::vector<double> p4){
-    double px = p4[0];
-    double py = p4[1];
-    double pz = p4[2];
-    double energy = p4[3];
-    tauvis1.SetPxPyPzE(px, py, pz, energy);
-  }
-  void HHFitterCF::setTauVis2(std::vector<double> p4){
-    double px = p4[0];
-    double py = p4[1];
-    double pz = p4[2];
-    double energy = p4[3];        
-    tauvis2.SetPxPyPzE(px, py, pz, energy);
-  }
-  void HHFitterCF::setMet(std::vector<double> metxy){
-    met.SetX(metxy[0]);
-    met.SetY(metxy[1]);
-  }
-  void HHFitterCF::setMetCov(std::vector<double> cov){
-    (*met_cov)[0][0]= cov[0];
-    (*met_cov)[0][1]= cov[1];
-    (*met_cov)[1][0]= cov[2];
-    (*met_cov)[1][1]= cov[3];
-  }
-  void HHFitterCF::setBJetRes(std::vector<double> res){
-    bjetres1=res[0];
-    bjetres2=res[1];
-  }
+  double pt = p4[0];
+  double eta = p4[1];
+  double phi = p4[2];
+  double m = p4[3];
+  bjet2.SetPtEtaPhiM(pt, eta, phi, m);
+}
+void HHFitterCF::setTauVis1(std::vector<double> p4){
+  double pt = p4[0];
+  double eta = p4[1];
+  double phi = p4[2];
+  double m = p4[3];
+  tauvis1.SetPtEtaPhiM(pt, eta, phi, m);
+}
+void HHFitterCF::setTauVis2(std::vector<double> p4){
+  double pt = p4[0];
+  double eta = p4[1];
+  double phi = p4[2];
+  double m = p4[3];
+  tauvis2.SetPtEtaPhiM(pt, eta, phi, m);
+}
+void HHFitterCF::setMet(std::vector<double> metxy){
+  met.SetX(metxy[0]);
+  met.SetY(metxy[1]);
+}
+void HHFitterCF::setMetCov(std::vector<double> cov){
+  (*met_cov)[0][0]= cov[0];
+  (*met_cov)[0][1]= cov[1];
+  (*met_cov)[1][0]= cov[1];
+  (*met_cov)[1][1]= cov[2];
+}
+void HHFitterCF::setBJetRes(std::vector<double> res){
+  bjetres1=res[0];
+  bjetres2=res[1];
+}
 
 float fitSingleEvent2DKinFit(){
   TLorentzVector bjet1(-18.0706,28.8731,19.1597,39.3622);
