@@ -13,3 +13,4 @@ else
     cmake .. -DPYTHON_LIBRARY_DIR="." -DPYTHON_EXECUTABLE="/usr/bin/python3"
 fi
 make -j4
+cp hhkinfit2*.so ../python/ 
