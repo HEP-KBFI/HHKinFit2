@@ -7,6 +7,7 @@
 #include "TVector2.h"
 #include "../interface/HHKinFitMasterHeavyHiggs.h"
 
+
 using namespace HHKinFit2;
 
 class HHFitterCF{
@@ -28,6 +29,9 @@ public:
   void setMetCov(std::vector<double> cov);
   void setMet(std::vector<double> metxy);
   void setBJetRes(std::vector<double> res);
+  float getTau1Ratio();
+  float getTau2Ratio();
+
   private:
   TLorentzVector bjet1;
   TLorentzVector bjet2;
@@ -124,8 +128,9 @@ void HHFitterCF::setTauVis2(std::vector<double> p4){
   tauvis2.SetPtEtaPhiM(pt, eta, phi, m);
 }
 void HHFitterCF::setMet(std::vector<double> metxy){
-  met.SetX(metxy[0]);
-  met.SetY(metxy[1]);
+  // met.SetX(metxy[0]);
+  // met.SetY(metxy[1]);
+  met.SetMagPhi(metxy[0], metxy[1]);
 }
 void HHFitterCF::setMetCov(std::vector<double> cov){
   (*met_cov)[0][0]= cov[0];
@@ -136,6 +141,14 @@ void HHFitterCF::setMetCov(std::vector<double> cov){
 void HHFitterCF::setBJetRes(std::vector<double> res){
   bjetres1=res[0];
   bjetres2=res[1];
+}
+
+float HHFitterCF::getTau1Ratio(){
+  return fittedTau1.E()/tauvis1.E();
+}
+
+float HHFitterCF::getTau2Ratio(){
+  return fittedTau2.E()/tauvis2.E();
 }
 
 float fitSingleEvent2DKinFit(){
@@ -175,12 +188,71 @@ float fitSingleEvent2DKinFit(){
 
 
 }
+
+// hh_kinfit.py code
+bool isDummy(const std::vector<double>& obj) {
+    return obj.size() == 4 && obj[0] == 0.0 && obj[1] == 0.0 && obj[2] == 0.0 && obj[3] == 1.0;
+}
+
+std::vector<std::vector<double>> batchFit(
+    const std::vector<std::vector<double>>& bjet1_list,
+    const std::vector<std::vector<double>>& bjet2_list,
+    const std::vector<std::vector<double>>& tauvis1_list,
+    const std::vector<std::vector<double>>& tauvis2_list,
+    const std::vector<std::vector<double>>& met_list,
+    const std::vector<std::vector<double>>& met_cov_list,
+    const std::vector<double>& bjet_resolutions
+) {
+    std::vector<std::vector<double>> results;
+
+    for (size_t i = 0; i < bjet1_list.size(); i++) {
+        if (isDummy(bjet1_list[i]) || isDummy(bjet2_list[i]) || isDummy(tauvis1_list[i]) || isDummy(tauvis2_list[i])) {
+            results.push_back(std::vector<double>(6 * bjet_resolutions.size(), -99999.0));
+            continue;
+        }
+
+        std::vector<double> event_results; // results vector initialized
+        for (double b_res : bjet_resolutions) { // loop over the b-jet resolution values
+            // std::cout << "using bjet resolution: " << b_res << std::endl;
+            try {
+                HHFitterCF fitter;
+                // Set inputs
+                fitter.setB1(bjet1_list[i]);
+                fitter.setB2(bjet2_list[i]);
+                fitter.setTauVis1(tauvis1_list[i]);
+                fitter.setTauVis2(tauvis2_list[i]);
+                fitter.setMet(met_list[i]);
+                fitter.setMetCov(met_cov_list[i]);
+                fitter.setBJetRes({b_res, b_res});
+
+                fitter.fit();  // Perform the fit
+                // std::cout << "Fit is done for event  " << i << " with b_res = " << b_res << std::endl;
+
+                // Store fit results
+                event_results.insert(event_results.end(), {fitter.getMH(), fitter.getTau1Ratio(), fitter.getTau2Ratio(), 
+                                                          fitter.getFitProb(), fitter.getChi2(), static_cast<double>(fitter.getConvergence())});
+            }
+            catch (const std::exception& e) {
+                // std::cerr << "Fit failed for event " << i << " with b_res = " << b_res << ": " << e.what() << std::endl;
+                event_results.insert(event_results.end(), { -99999.0, -99999.0, -99999.0, -99999.0, -99999.0, -99999.0 });
+            }
+        }
+        results.push_back(event_results);
+    }
+    return results;
+}
+
+
+
+
 namespace py = pybind11;
 
 PYBIND11_MODULE(hhkinfit2, m) {
   m.doc() = "pybind11 version of hhkinfit2"; // optional module docstring
 
   m.def("fitSingleEvent2DKinFit", &fitSingleEvent2DKinFit, "fittest");
+
+  m.def("batchFit", &batchFit, "Batch process multiple HH KinFit events");
 
   py::class_<HHFitterCF>(m, "HHFitterCF")
     .def(py::init())
